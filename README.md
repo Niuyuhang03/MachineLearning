@@ -20,7 +20,7 @@
 
 [kNN](https://github.com/Niuyuhang03/MachineLearning/blob/master/kNN)：kNN实现时，采用了对测试集进行纵向复制、相减后求距离，排序时返回索引，统计label时用了字典的get函数，归一化时采用.max(0)函数，大大简化了代码。
 
-[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：实现了决策树的可视化
+[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：实现了决策树的可视化、保存等工作
 
 #### 回归
 
