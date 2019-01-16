@@ -5,6 +5,8 @@ from math import log
 import operator
 import pickle
 
+#author jackcui
+
 """
 函数说明:计算给定数据集的经验熵(香农熵)
 
