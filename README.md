@@ -29,3 +29,60 @@
 #### 聚类
 
 #### 数据降维
+
+## 数据处理
+
+一般通过.csv文件读取数据。通过.values函数得到的数据格式为np.array。读出数据通过.shape函数验证大小。
+
+```python
+dataset = pd.read_csv("filename.csv")
+X = dataset.drop(['label'], axis=1).values
+Y = dataset['label'].values
+# 无标签则用如下方式读数据
+# dataset = pd.read_csv("filename.csv",header=None)
+# X = dataset.iloc[:, :-1].values
+# Y = dataset.iloc[:, -1].values
+```
+
+判断数据中是否有缺失项，如果有，用均值代替。
+
+```python
+from sklearn.preprocessing import Imputer
+if np.isnan(X).sum() != 0:
+    imp = Imputer(missing_values='NaN',strategy='mean',axis=0)
+    imp.fit(X)
+    X = imp.transform(X)
+```
+
+拆分训练集和交叉验证集。
+
+```python
+from sklearn.model_selection import train_test_split
+train_X, cv_X, train_Y, cv_Y = train_test_split(X, Y, test_size=0.2)
+```
+
+归一化，注意只对训练集求均值方差，而后应用到训练集、交叉验证集和测试集中。
+
+```python
+# 均值方差归一化，多用于距离相关的模型，如K-means
+from sklearn.preprocessing import StandardScaler
+sc_X = StandardScaler()
+train_X = sc_X.fit_transform(train_X)
+cv_X = sc_X.transform(cv_X)
+test_X = sc_X.transform(test_X)
+```
+
+```python
+# 线性归一化，多用于图片等
+from sklearn.preprocessing import MinMaxScaler
+mc_X = MinMaxScaler()
+train_X = mc_X.fit_transform(train_X)
+cv_X = mc_X.transform(cv_X)
+test_X = mc_X.transform(test_X)
+```
+
+写入.csv中。
+
+```python
+pd.DataFrame(result_new).to_csv('submission.csv', index=False, encoding='utf8', header=False)
+```
