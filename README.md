@@ -1,8 +1,6 @@
 # MachineLearning
 
-机器学习算法实践，参考了[Jack Cui](https://cuijiahua.com/)等教程提供的相关代码和讲解。请先看每种方法的.md文件，内含方法说明和样例说明。
-
-样本数据来自[Jack Cui](https://github.com/Jack-Cherish/Machine-Learning)，[北航数据工作站](http://contest.mooc.buaa.edu.cn/)等网站，以及《机器学习实践》中的内容。
+机器学习算法实践，参考了[Jack Cui](https://cuijiahua.com/)、[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code)、《机器学习实践》等教程提供的相关代码和讲解。请先看每种方法的.md文件，内含方法说明和样例说明。
 
 ## 机器学习方法
 
@@ -18,9 +16,9 @@
 
 #### 分类
 
-[kNN](https://github.com/Niuyuhang03/MachineLearning/blob/master/kNN)：kNN实现时，采用了对测试集进行纵向复制、相减后求距离，排序时返回索引，统计label时用了字典的get函数，归一化时采用.max(0)函数，大大简化了代码。
+[kNN](https://github.com/Niuyuhang03/MachineLearning/blob/master/kNN)
 
-[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：实现了决策树的可视化、保存等工作
+[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)
 
 #### 回归
 
@@ -35,33 +33,48 @@
 一般通过.csv文件读取数据。通过.values函数得到的数据格式为np.array。读出数据通过.shape函数验证大小。
 
 ```python
-dataset = pd.read_csv("filename.csv")
-X = dataset.drop(['label'], axis=1).values
-Y = dataset['label'].values
-# 无标签则用如下方式读数据
-# dataset = pd.read_csv("filename.csv",header=None)
-# X = dataset.iloc[:, :-1].values
-# Y = dataset.iloc[:, -1].values
+train_dataset = pd.read_csv("filename.csv",header=None)
+X = train_dataset.iloc[:, :-1].values
+Y = train_dataset.iloc[:, -1].values
+# 若csv文件中第一行有标签，还可以这样读取
+train_dataset = pd.read_csv("filename.csv")
+X = train_dataset.drop(['label'], axis=1).values
+Y = train_dataset['label'].values
+```
+将数据集中的male、female替换为0和1
+
+```python
+from sklearn.preprocessing import LabelEncoder
+labelencoder_X = LabelEncoder()
+X[:,0] = labelencoder_X.fit_transform(X[:,0])
 ```
 
-判断数据中是否有缺失项，如果有，用均值代替。
+将标签中的类别变为独热编码
+
+```python
+from sklearn.preprocessing import OneHotEncoder
+onehotencoder = OneHotEncoder(categorical_features = [0])
+Y = onehotencoder.fit_transform(Y).toarray()
+```
+
+判断数据中是否有缺失项，如果有，用均值代替。注意isnan函数要求输入为float。
 
 ```python
 from sklearn.preprocessing import Imputer
-if np.isnan(X).sum() != 0:
+if np.isnan(X.astype(float)).sum() != 0:
     imp = Imputer(missing_values='NaN',strategy='mean',axis=0)
     imp.fit(X)
-    X = imp.transform(X)
+    X = imp.transform(X).astype(np.int32)
 ```
 
-拆分训练集和交叉验证集。
+拆分训练集和交叉验证集，一般比例为8:2。
 
 ```python
 from sklearn.model_selection import train_test_split
 train_X, cv_X, train_Y, cv_Y = train_test_split(X, Y, test_size=0.2)
 ```
 
-归一化，注意只对训练集求均值方差，而后应用到训练集、交叉验证集和测试集中。
+归一化，将特征缩放到同一范围内。注意只对训练集求缩放的模型，而后应用到训练集、交叉验证集和测试集中。
 
 ```python
 # 均值方差归一化，多用于距离相关的模型，如K-means
@@ -81,7 +94,23 @@ cv_X = mc_X.transform(cv_X)
 test_X = mc_X.transform(test_X)
 ```
 
-写入.csv中。
+评价
+
+```python
+# confusion_matrix
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(cv_Y, predict_cv_Y)
+print(cm)
+```
+
+```python
+# f1_score
+from sklearn.metrics import f1_score
+score = f1_score(cv_Y, predict_cv_Y)
+print(cm)
+```
+
+将预测结果写入.csv中。
 
 ```python
 pd.DataFrame(result_new).to_csv('submission.csv', index=False, encoding='utf8', header=False)
