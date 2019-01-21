@@ -98,17 +98,30 @@ test_X = mc_X.transform(test_X)
 评价。
 
 ```python
-# confusion_matrix
+# confusion_matrix混淆矩阵，用于label较少时
 from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(cv_Y, predict_cv_Y)
 print(cm)
 ```
 
 ```python
-# f1_score
+# f1_score， 用于二分类
 from sklearn.metrics import f1_score
 score = f1_score(cv_Y, predict_cv_Y)
 print(cm)
+```
+
+```python
+# 均方误差
+from sklearn.metrics import mean_squared_error
+score = mean_squared_error(cv_Y, predict_cv_Y)
+print(score)
+```
+
+```python
+# 决定系数，可用于回归
+from sklearn.metrics import r2_score
+score = r2_score(cv_Y, predict_cv_Y)
 ```
 
 将预测结果写入.csv中。

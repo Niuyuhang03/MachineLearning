@@ -2,9 +2,9 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import Imputer, LabelEncoder, MinMaxScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import f1_score
-from sklearn.metrics import confusion_matrix
 from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+
 
 def load_data():
     '''
@@ -78,32 +78,42 @@ def classify(normal_train_X, train_Y, normal_test_X, alpha, num_iters):
     '''
     theta = gradient_descent(normal_train_X, train_Y, alpha, num_iters)
     predict_test_Y = np.dot(normal_test_X, theta).flatten()
-    return  predict_test_Y, theta
+    return predict_test_Y, theta
 
-def cv_classify(theta, normal_cv_X, cv_Y):
+def cv_classify(normal_cv_X, cv_Y):
     '''
     预测交叉验证集，选取最优k值
-    :param theta：回归系数theta
     :param normal_cv_X: 归一化后的交叉验证集特征
     :param cv_Y：交叉验证集表标签
+    :return：最优学习速率，最优迭代次数
     '''
     print("--------------")
-    print("Test CV:")
-    predict_cv_Y = np.dot(normal_cv_X, theta).flatten()
-    score = f1_score(cv_Y.astype(np.float64), predict_cv_Y.astype(np.float64))
-    cm = confusion_matrix(cv_Y, predict_cv_Y)
-    print(cm)
-    print("f1_score="+str(score))
+    print("Choose Best Alpha and Num_iters:")
+    best_alpha = 0
+    best_num_iters = 0
+    best_score = 0
+    alpha_list = [1, 0.3, 0.1, 0.03, 0.01, 0.003, 0.001]
+    num_iters_list = [1000, 3000, 10000, 30000, 100000]
+    for alpha in alpha_list:
+        for num_iters in num_iters_list:
+            predict_cv_Y, theta = classify(normal_train_X, train_Y, normal_cv_X, alpha, num_iters)
+            score = r2_score(cv_Y,predict_cv_Y)
+            if score > best_score:
+                best_score = score
+                best_alpha = alpha
+                best_num_iters = num_iters
+            print("alpha="+str(alpha)+" num_iters="+str(num_iters)+" r2 score="+str(score))
+    print("--------------")
+    print("best alpha="+str(best_alpha)+" best num iters="+str(best_num_iters)+" best r2 score="+str(best_score))
+    return best_alpha, best_num_iters
 
 if __name__ == '__main__':
     train_X, cv_X, train_Y, cv_Y, test_X = load_data()
     normal_train_X, normal_cv_X, normal_test_X = normalization(train_X, cv_X, test_X)
-    alpha = 0.01
-    num_iters = 10000
 
     # 手动实现
+    alpha, num_iters = cv_classify(normal_cv_X, cv_Y)
     predict_test_Y, theta = classify(normal_train_X, train_Y, normal_test_X, alpha, num_iters)
-    # cv_classify(theta, normal_cv_X, cv_Y)
     print("--------------")
     print("Predict Test Dataset:")
     print(predict_test_Y)
@@ -115,9 +125,7 @@ if __name__ == '__main__':
     classifier.fit(normal_train_X, train_Y)
     score = classifier.score(normal_cv_X, cv_Y)
     predict_cv_Y = classifier.predict(normal_cv_X)
-    print("f1_score=" + str(score))
-    # cm = confusion_matrix(cv_Y, predict_cv_Y)
-    # print(cm)
+    print("r2 score=" + str(score))
     print("--------------")
     print("Predict Test Dataset:")
     predict_test_Y = classifier.predict(normal_test_X)
