@@ -124,6 +124,12 @@ from sklearn.metrics import r2_score
 score = r2_score(cv_Y, predict_cv_Y)
 ```
 
+```python
+# 准确率
+from sklearn.metrics import accuracy_score
+score = accuracy_score(cv_Y, predict_cv_Y)
+```
+
 将预测结果写入.csv中。
 
 ```python

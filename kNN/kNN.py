@@ -3,7 +3,7 @@ import pandas as pd
 import operator
 from sklearn.preprocessing import Imputer, LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import f1_score
+from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 from sklearn.neighbors import KNeighborsClassifier
 
@@ -87,21 +87,21 @@ def cv_classify(normal_train_X, train_Y, normal_cv_X, cv_Y):
     print("--------------")
     print("Choosing Best K:")
     best_k = 1
-    best_f1_score = 0
+    best_accuracy_score = 0
     best_predict_cv_Y = []
     for k in range(1, 21):
         predict_cv_Y = classify(normal_train_X, train_Y, normal_cv_X, k)
-        score = f1_score(cv_Y, predict_cv_Y)
-        if score > best_f1_score:
+        score = accuracy_score(cv_Y, predict_cv_Y)
+        if score > best_accuracy_score:
             best_k = k
-            best_f1_score = score
+            best_accuracy_score = score
             best_predict_cv_Y = predict_cv_Y
-        print("k="+str(k)+" f1_score="+str(score))
+        print("k="+str(k)+" accuracy_score="+str(score))
     print("--------------")
     print("Score in Best K:")
     cm = confusion_matrix(cv_Y, best_predict_cv_Y)
     print(cm)
-    print("best k="+str(best_k)+" best f1_score="+str(best_f1_score))
+    print("best k="+str(best_k)+" best accuracy_score="+str(best_accuracy_score))
     return best_k
 
 if __name__ == '__main__':
@@ -120,22 +120,22 @@ if __name__ == '__main__':
     print("--------------")
     print("Choosing Best K:")
     best_k = 1
-    best_f1_score = 0
+    best_accuracy_score = 0
     best_predict_cv_Y = []
     for k in range(1, 21):
         classifier = KNeighborsClassifier(n_neighbors=k)
         classifier.fit(normal_train_X, train_Y)
         score = classifier.score(normal_cv_X, cv_Y)
-        if score > best_f1_score:
+        if score > best_accuracy_score:
             best_k = k
-            best_f1_score = score
+            best_accuracy_score = score
             best_predict_cv_Y = classifier.predict(normal_cv_X)
-        print("k=" + str(k) + " f1_score=" + str(score))
+        print("k=" + str(k) + " accuracy_score=" + str(score))
     print("--------------")
     print("Score in Best K:")
     cm = confusion_matrix(cv_Y, best_predict_cv_Y)
     print(cm)
-    print("best k=" + str(best_k) + " best f1_score=" + str(best_f1_score))
+    print("best k=" + str(best_k) + " best accuracy_score=" + str(best_accuracy_score))
     print("--------------")
     print("Predict Test Dataset:")
     classifier = KNeighborsClassifier(n_neighbors=best_k)
