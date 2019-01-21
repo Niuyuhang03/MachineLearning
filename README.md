@@ -18,9 +18,9 @@
 
 [kNN](https://github.com/Niuyuhang03/MachineLearning/blob/master/kNN)
 
-[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)
-
 #### 回归
+
+[线性回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/linear_regression)
 
 ### 无监督学习
 
@@ -41,15 +41,16 @@ train_dataset = pd.read_csv("filename.csv")
 X = train_dataset.drop(['label'], axis=1).values
 Y = train_dataset['label'].values
 ```
-将数据集中的male、female替换为0和1
+将数据集中的male、female替换为0和1。注意如果特征中有需要标准化标签时，读出数据时不应加.values。
 
 ```python
 from sklearn.preprocessing import LabelEncoder
 labelencoder_X = LabelEncoder()
-X[:,0] = labelencoder_X.fit_transform(X[:,0])
+X.iloc[:,0] = labelencoder_X.fit_transform(X.iloc[:,0])
+X = X.values
 ```
 
-将标签中的类别变为独热编码
+将标签中的类别变为独热编码。
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
@@ -94,7 +95,7 @@ cv_X = mc_X.transform(cv_X)
 test_X = mc_X.transform(test_X)
 ```
 
-评价
+评价。
 
 ```python
 # confusion_matrix

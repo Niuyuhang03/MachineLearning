@@ -1,11 +1,15 @@
 # -*- coding: UTF-8 -*-
+import numpy as np
+import pandas as pd
+import operator
+from sklearn.preprocessing import Imputer, LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
+from sklearn.metrics import confusion_matrix
 from matplotlib.font_manager import FontProperties
 import matplotlib.pyplot as plt
 from math import log
-import operator
 import pickle
-
-#author jackcui
 
 """
 函数说明:计算给定数据集的经验熵(香农熵)
@@ -28,34 +32,6 @@ def calcShannonEnt(dataSet):
         prob = float(labelCounts[key]) / numEntires    #选择该标签(Label)的概率
         shannonEnt -= prob * log(prob, 2)            #利用公式计算
     return shannonEnt                                #返回经验熵(香农熵)
-
-"""
-函数说明:创建测试数据集
-
-Parameters:
-    无
-Returns:
-    dataSet - 数据集
-    labels - 特征标签
-"""
-def createDataSet():
-    dataSet = [[0, 0, 0, 0, 'no'],                        #数据集
-            [0, 0, 0, 1, 'no'],
-            [0, 1, 0, 1, 'yes'],
-            [0, 1, 1, 0, 'yes'],
-            [0, 0, 0, 0, 'no'],
-            [1, 0, 0, 0, 'no'],
-            [1, 0, 0, 1, 'no'],
-            [1, 1, 1, 1, 'yes'],
-            [1, 0, 1, 2, 'yes'],
-            [1, 0, 1, 2, 'yes'],
-            [2, 0, 1, 2, 'yes'],
-            [2, 0, 1, 1, 'yes'],
-            [2, 1, 0, 1, 'yes'],
-            [2, 1, 0, 2, 'yes'],
-            [2, 0, 0, 0, 'no']]
-    labels = ['年龄', '有工作', '有自己的房子', '信贷情况']        #特征标签
-    return dataSet, labels                             #返回数据集和分类属性
 
 """
 函数说明:按照给定特征划分数据集
@@ -117,8 +93,7 @@ Returns:
 def majorityCnt(classList):
     classCount = {}
     for vote in classList:                                        #统计classList中每个元素出现的次数
-        if vote not in classCount.keys():classCount[vote] = 0
-        classCount[vote] += 1
+        classCount[vote] = classCount.get(vote, 0) + 1
     sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)        #根据字典的值降序排序
     return sortedClassCount[0][0]                                #返回classList中出现次数最多的元素
 
@@ -134,16 +109,16 @@ Returns:
 """
 def createTree(dataSet, labels, featLabels):
     classList = [example[-1] for example in dataSet]            #取分类标签(是否放贷:yes or no)
-    if classList.count(classList[0]) == len(classList):            #如果类别完全相同则停止继续划分
+    if classList.count(classList[0]) == len(classList):         #如果类别完全相同则停止继续划分
         return classList[0]
-    if len(dataSet[0]) == 1 or len(labels) == 0:                                    #遍历完所有特征时返回出现次数最多的类标签
+    if len(dataSet[0]) == 1 or len(labels) == 0:                #遍历完所有特征时返回出现次数最多的类标签
         return majorityCnt(classList)
     bestFeat = chooseBestFeatureToSplit(dataSet)                #选择最优特征
     bestFeatLabel = labels[bestFeat]                            #最优特征的标签
     featLabels.append(bestFeatLabel)
-    myTree = {bestFeatLabel:{}}                                    #根据最优特征的标签生成树
-    del(labels[bestFeat])                                        #删除已经使用特征标签
-    featValues = [example[bestFeat] for example in dataSet]        #得到训练集中所有最优特征的属性值
+    myTree = {bestFeatLabel:{}}                                 #根据最优特征的标签生成树
+    del(labels[bestFeat])                                       #删除已经使用特征标签
+    featValues = [example[bestFeat] for example in dataSet]     #得到训练集中所有最优特征的属性值
     uniqueVals = set(featValues)                                #去掉重复的属性值
     for value in uniqueVals:                                    #遍历特征，创建决策树。
         myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), labels, featLabels)
@@ -317,16 +292,100 @@ def grabTree(filename):
     fr = open(filename, 'rb')
     return pickle.load(fr)
 
-if __name__ == '__main__':
-    dataSet, labels = createDataSet()
+def read_train_data():
+    '''
+    读入训练集
+    :return:训练集特征、交叉验证集特征、训练集标签、交叉验证集标签
+    '''
+    train_data = pd.read_csv('train.csv')
+    X = train_data.iloc[:, 1:4].values
+    Y = train_data.iloc[:, 4].values
+    # 将male和female转为1和0
+    labelencoder_X = LabelEncoder()
+    X[:,0] = labelencoder_X.fit_transform(X[:,0])
+    # 将缺失数据替换为平均值
+    if np.isnan(X.astype(float)).sum() > 0:
+        print("NaN exists in train_X.")
+        imp = Imputer(missing_values='NaN',strategy='mean',axis=0)
+        imp.fit(X)
+        X = imp.transform(X).astype(np.int32)
+    # 划分训练集和交叉验证集，比例为8:2
+    train_X, cv_X, train_Y, cv_Y = train_test_split(X, Y, test_size=0.2)
+    return train_X, cv_X, train_Y, cv_Y
+
+def read_test_data():
+    '''
+    读入测试集
+    :return:测试集特征
+    '''
+    test_data = pd.read_csv('test.csv')
+    test_X = test_data.iloc[:, 1:4].values
+    # 将male和female转为1和0
+    labelencoder_test_X = LabelEncoder()
+    test_X[:, 0] = labelencoder_test_X.fit_transform(test_X[:, 0])
+    return test_X
+
+def normalization(train_X, cv_X, test_X):
+    '''
+    归一化
+    :param train_X: 训练集特征
+    :param cv_X: 交叉验证集特征
+    :return: 归一化后的训练集特征和交叉验证集特征
+    '''
+    sc_X = StandardScaler()
+    normal_train_X = sc_X.fit_transform(train_X)
+    normal_cv_X = sc_X.transform(cv_X)
+    normal_test_X = sc_X.transform(test_X)
+    return normal_train_X, normal_cv_X, normal_test_X
+
+def Classify_tree(normal_train_X, train_Y, normal_test_X):
+    '''
+    预测
+    :param normal_train_X: 归一化后的训练集特征
+    :param train_Y: 训练集标签
+    :param normal_test_X: 归一化后的测试集特征
+    :return: 测试集标签
+    '''
+    num_normal_test_X = normal_test_X.shape[0]
+    predict_test_Y = []
     featLabels = []
-    myTree = createTree(dataSet, labels, featLabels)
-    # print(myTree)
+    dataset = np.hstack((normal_train_X,train_Y))
+    labels = ['Gender','Age','EstimatedSalary']
+    myTree = createTree(dataset, labels, featLabels)
     storeTree(myTree, 'classifierStorage.txt')
     createPlot(myTree)
-    testVec = [0, 1]  # 测试数据
-    result = classify(myTree, featLabels, testVec)
-    if result == 'yes':
-        print('放贷')
-    if result == 'no':
-        print('不放贷')
+    for i in range(num_normal_test_X):
+        result = classify(myTree, featLabels, normal_test_X[i, :])
+        predict_test_Y.append(result)
+    return np.array(predict_test_Y)
+
+def cv_Classify_tree(normal_train_X, train_Y, normal_cv_X, cv_Y):
+    '''
+    预测交叉验证集，选取最优k值
+    :param normal_train_X: 归一化后的训练集特征
+    :param train_Y: 训练集标签
+    :param normal_cv_X: 归一化后的交叉验证集特征
+    :param cv_Y：交叉验证集表标签
+    '''
+    print("--------------")
+    print("Test CV:")
+    predict_cv_Y = Classify_tree(normal_train_X, train_Y, normal_cv_X)
+    score = f1_score(cv_Y, predict_cv_Y)
+    print(" f1_score="+str(score))
+    cm = confusion_matrix(cv_Y, predict_cv_Y)
+    print(cm)
+
+if __name__ == '__main__':
+    train_X, cv_X, train_Y, cv_Y = read_train_data()
+    test_X = read_test_data()
+    normal_train_X, normal_cv_X, normal_test_X = normalization(train_X, cv_X, test_X)
+
+    # 手动实现
+    cv_Classify_tree(normal_train_X, train_Y, normal_cv_X, cv_Y)
+    predict_test_Y = Classify_tree(normal_train_X, train_Y, normal_test_X)
+    print("--------------")
+    print("Predict Test Dataset:")
+    print(predict_test_Y)
+    pd.DataFrame(predict_test_Y).to_csv('submission.csv', index=False, encoding='utf8', header=False)
+
+    # 调库

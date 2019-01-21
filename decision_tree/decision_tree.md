@@ -15,3 +15,7 @@
 决策树剪枝分为预剪枝和后剪枝两种。所谓剪枝，即判断把该节点及以下节点剪掉，替换为叶节点后，模型的泛化性能是否得到提升。不同的是，预剪枝在生成决策树的每一步都要计算一次，后剪枝则是生成完成后，从最下层的叶节点依次向上计算。
 
 决策树的可视化使用了Matplotlib库，保存则用了pickle.dump函数。
+
+## 实例
+
+[decidion_tree.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree/decision_tree.py)
