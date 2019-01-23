@@ -20,6 +20,10 @@
 
 [逻辑回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/logistic_regression)
 
+[支持向量机](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)：尚未完成手搭部分
+
+[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：尚未完成
+
 #### 回归
 
 [线性回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/linear_regression)
@@ -135,6 +139,8 @@ print(cm)
 
 均方误差：
 
+![均方误差](http://ww1.sinaimg.cn/large/96803f81ly1fzgd80u212j207a034wed.jpg)
+
 ```python
 # 均方误差MSE
 from sklearn.metrics import mean_squared_error
@@ -143,6 +149,8 @@ print(score)
 ```
 
 决定系数r2：
+
+![决定系数](http://ww1.sinaimg.cn/large/96803f81ly1fzgd9y3y8vj206i01ja9y.jpg)
 
 ```python
 # 决定系数，可用于回归
