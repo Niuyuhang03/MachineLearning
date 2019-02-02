@@ -41,10 +41,10 @@ def normalization(train_X, cv_X, test_X):
     :param test_X：测试集特征
     :return: 归一化后的训练集特征、交叉验证集特征和测试集特征
     '''
-    mc_X = MinMaxScaler()
-    normal_train_X = mc_X.fit_transform(train_X)
-    normal_cv_X = mc_X.transform(cv_X)
-    normal_test_X = mc_X.transform(test_X)
+    sc_X = MinMaxScaler()
+    normal_train_X = sc_X.fit_transform(train_X)
+    normal_cv_X = sc_X.transform(cv_X)
+    normal_test_X = sc_X.transform(test_X)
     return normal_train_X, normal_cv_X, normal_test_X
 
 def gradient_descent(normal_train_X, train_Y, alpha, num_iters):
