@@ -20,7 +20,7 @@
 
 [逻辑回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/logistic_regression)
 
-[支持向量机](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)：尚未完成手搭部分
+[支持向量机](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)
 
 [决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：尚未完成
 
