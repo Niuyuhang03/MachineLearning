@@ -30,4 +30,4 @@
 
 ## 实例
 
-[logistic_regression.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/logistic_regression/logistic_regression.py)
+[logistic_regression.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/logistic_regression/logistic_regression.py)：数据集来源为[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code/blob/master/datasets/Social_Network_Ads.csv)

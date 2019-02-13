@@ -4,9 +4,9 @@
 
 ## 机器学习方法
 
-机器学习算法根据训练集有无标签可以分为有监督学习和无监督学习。有监督学习的训练集中有y值（label），可根据label为数值型还是标称型分为回归和分类。顾名思义，回归问题的label为1.03这样的数值，而分类问题的label多为真假等标签集。无监督学习则没有label，可分为聚类问题和数据降维等。聚类即将样本根据特征分为几类，数据降维则可以直观的显示数据信息。此外还有半监督学习、增强学习等。
+机器学习算法通常可以分为有监督学习、无监督学习和增强学习。有监督学习的训练集中有y值（label），可根据label为数值型还是标称型分为回归和分类。顾名思义，回归问题的label为1.03这样的数值，而分类问题的label多为真假等标签集。无监督学习则没有label，可分为聚类问题和数据降维等。聚类即将样本根据特征分为几类，数据降维则可以直观的显示数据信息。此外还有半监督学习、增强学习等。
 
-机器学习中，我们往往将深度学习单独剥离开来。深度学习指的是使用神经网络的机器学习算法。
+而深度学习则指的是使用神经网络的机器学习算法。
 
 集成学习则是将多种机器学习算法结合起来，利用投票等方法选择最终的结果。
 
@@ -16,15 +16,19 @@
 
 #### 分类
 
+分类问题即标签为真假等类别标签，但不一定只有两类。分类问题常用的方法如下：
+
 [kNN](https://github.com/Niuyuhang03/MachineLearning/blob/master/kNN)
 
 [逻辑回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/logistic_regression)
 
-[支持向量机](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)
+[SVM](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)
 
 [决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：尚未完成
 
 #### 回归
+
+回归问题的标签一般是值，所做的工作也是预测出测试集的值，如房价等。回归问题常用的方法如下：
 
 [线性回归](https://github.com/Niuyuhang03/MachineLearning/blob/master/linear_regression)
 
@@ -32,11 +36,15 @@
 
 #### 聚类
 
+[k-means](https://github.com/Niuyuhang03/MachineLearning/blob/master/k-means)
+
 #### 数据降维
 
 ## 数据处理
 
-读取数据：一般从.csv文件读取数据。通过.values函数得到的数据格式为np.array。推荐读出数据后通过.shape函数验证大小。
+数据处理是所有算法实现前都需要进行的工作。将原始数据读取、筛选、归一化后，再放入算法中训练、验证和预测。
+
+读取数据：一般从.csv文件读取数据。通过.values函数得到的数据格式为np.array，也可以用pandas读出的DataFrame格式直接运算。推荐读出数据后通过.shape函数验证大小。
 
 ```python
 import pandas as pd
@@ -148,7 +156,7 @@ score = mean_squared_error(cv_Y, predict_cv_Y)
 print(score)
 ```
 
-决定系数r2：
+决定系数r2：回归问题常用
 
 ![决定系数](http://ww1.sinaimg.cn/large/96803f81ly1fzgd9y3y8vj206i01ja9y.jpg)
 

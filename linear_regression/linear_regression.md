@@ -36,4 +36,4 @@
 
 ## 实例
 
-[linear_regression.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/linear_regression/linear_regression.py)
+[linear_regression.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/linear_regression/linear_regression.py)：数据集来源为[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code/blob/master/datasets/50_Startups.csv)
