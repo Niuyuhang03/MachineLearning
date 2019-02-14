@@ -24,7 +24,7 @@
 
 [SVM](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM)
 
-[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)：尚未完成
+[决策树](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree)
 
 #### 回归
 
@@ -35,6 +35,8 @@
 ### 无监督学习
 
 #### 聚类
+
+聚类问题是将无标签的样本划分成k类的算法。
 
 [k-means](https://github.com/Niuyuhang03/MachineLearning/blob/master/k-means)
 
