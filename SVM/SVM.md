@@ -12,4 +12,4 @@ SVM用序列最小优化算法SMO可以较快求解，SMO主要有如下步骤�
 
 ## 实例
 
-[SVM.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM/SVM.py)，手动搭建参考[jack cui](https://cuijiahua.com/blog/2017/11/ml_8_svm_1.html)文章。数据集来源为[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code/blob/master/datasets/Social_Network_Ads.csv)
+[SVM.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/SVM/SVM.py)：手动搭建参考[jack cui](https://cuijiahua.com/blog/2017/11/ml_8_svm_1.html)文章。数据集来源为[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code/blob/master/datasets/Social_Network_Ads.csv)

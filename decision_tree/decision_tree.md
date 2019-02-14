@@ -18,4 +18,4 @@
 
 ## 实例
 
-[decidion_tree.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree/decision_tree.py)
+[decidion_tree.py](https://github.com/Niuyuhang03/MachineLearning/blob/master/decision_tree/decision_tree.py)：手动搭建参考[jack cui](https://cuijiahua.com/blog/2017/11/ml_2_decision_tree_1.html)文章。
