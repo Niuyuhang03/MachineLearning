@@ -2,11 +2,11 @@
 
 机器学习算法实践，参考了[cs 229](https://zh.coursera.org/learn/machine-learning)、[Jack Cui](https://cuijiahua.com/)、[100-Days-Of-ML-Code](https://github.com/MLEveryday/100-Days-Of-ML-Code)等教程提供的相关代码和讲解。请先看每种方法的.md文件，内含方法说明和样例说明。
 
-## 机器学习方法
+## 概述
 
 机器学习算法通常可以分为有监督学习、无监督学习和增强学习。有监督学习的训练集中有y值（label），可根据label为数值型还是标称型分为回归和分类。顾名思义，回归问题的label为1.03这样的数值，而分类问题的label多为真假等标签集。无监督学习则没有label，可分为聚类问题和数据降维等。聚类即将样本根据特征分为几类，数据降维则可以直观的显示数据信息。此外还有半监督学习等。
 
-而深度学习则指的是使用神经网络的机器学习算法。
+而深度学习则指的是使用深层架构（如隐藏层两层以上神经网络）的机器学习算法。
 
 集成学习则是将多种机器学习算法结合起来，利用投票等方法选择最终的结果。
 
@@ -41,6 +41,12 @@
 [k-means](https://github.com/Niuyuhang03/MachineLearning/blob/master/k-means)
 
 #### 数据降维
+
+数据降维可以将特征减少，降低计算时间，如PCA等方法。
+
+### 深度学习
+
+[ANN](https://github.com/Niuyuhang03/MachineLearning/blob/master/ANN)
 
 ## 数据处理
 
