@@ -44,6 +44,12 @@
 
 数据降维可以将特征减少，降低计算时间，如PCA等方法。
 
+#### 关联规则挖掘
+
+关联规则挖掘可以用作推荐算法。
+
+[apriori](https://github.com/Niuyuhang03/MachineLearning/blob/master/apriori)
+
 ### 深度学习
 
 [ANN](https://github.com/Niuyuhang03/MachineLearning/blob/master/ANN)
